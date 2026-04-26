@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M. S. Pandeti</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8D5A3;
+    --gold-dim: #7A6330;
+    --ink: #0A0A0A;
+    --ink-2: #111111;
+    --ink-3: #1A1A1A;
+    --smoke: #F0EDE8;
+    --smoke-dim: #B0AB9F;
+    --line: rgba(201,168,76,0.18);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Montserrat', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--smoke);
+    font-family: var(--sans);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--gold-dim); color: var(--smoke); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.5rem 4rem;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.98), transparent);
+    border-bottom: 0.5px solid transparent;
+    transition: border-color 0.4s;
+  }
+  nav.scrolled { border-bottom-color: var(--line); }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--smoke);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--smoke-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 4rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,168,76,0.04) 0%, transparent 60%),
+      linear-gradient(165deg, #0A0A0A 0%, #111008 50%, #0A0A0A 100%);
+  }
+
+  .hero-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 20%, transparent 80%);
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block; width: 40px; height: 0.5px;
+    background: var(--gold);
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(4rem, 8vw, 7.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: 0.04em;
+    color: var(--smoke);
+    position: relative;
+    margin-bottom: 0.2em;
+  }
+  .hero-name em { font-style: italic; color: var(--gold-light); }
+
+  .hero-tagline {
+    font-family: var(--serif);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--smoke-dim);
+    margin-bottom: 3rem;
+    max-width: 540px;
+    line-height: 1.6;
+    position: relative;
+  }
+
+  .hero-cta {
+    display: flex; align-items: center; gap: 2rem;
+    position: relative;
+  }
+
+  .btn-primary {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    border: none; cursor: pointer;
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-ghost {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--smoke-dim);
+    background: none;
+    border: 0.5px solid rgba(176,171,159,0.3);
+    cursor: pointer;
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { color: var(--smoke); border-color: var(--smoke-dim); }
+
+  .hero-scroll {
+    position: absolute; bottom: 2rem; right: 4rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+  .scroll-line {
+    width: 0.5px; height: 48px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  /* DIVIDER */
+  .gold-divider {
+    display: flex; align-items: center; gap: 1.5rem;
+    padding: 0 4rem; margin: 0;
+  }
+  .gold-divider::before, .gold-divider::after {
+    content: ''; flex: 1; height: 0.5px; background: var(--line);
+  }
+  .gold-divider-mark {
+    width: 5px; height: 5px;
+    border: 0.5px solid var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* SECTION BASE */
+  section { padding: 7rem 4rem; position: relative; }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after {
+    content: ''; flex: 0 0 30px; height: 0.5px; background: var(--gold-dim);
+  }
+
+  /* ABOUT */
+  .about { background: var(--ink-2); }
+  .about-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+    align-items: start;
+  }
+
+  .about-heading {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    color: var(--smoke);
+    margin-bottom: 2rem;
+  }
+  .about-heading em { font-style: italic; color: var(--gold-light); }
+
+  .about-body {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--smoke-dim);
+    margin-bottom: 1.5rem;
+  }
+
+  .about-right { padding-top: 1rem; }
+
+  .stat-row {
+    border-top: 0.5px solid var(--line);
+    padding: 1.8rem 0;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .stat-row:last-child { border-bottom: 0.5px solid var(--line); }
+
+  .stat-label {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+  .stat-value {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--smoke);
+    letter-spacing: 0.02em;
+  }
+  .stat-unit {
+    font-size: 0.9rem;
+    color: var(--smoke-dim);
+    margin-left: 0.3rem;
+  }
+
+  /* STRUCTURE */
+  .structure { background: var(--ink); }
+
+  .structure-heading {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 300;
+    color: var(--smoke);
+    margin-bottom: 4rem;
+    max-width: 500px;
+    line-height: 1.2;
+  }
+  .structure-heading em { font-style: italic; color: var(--gold-light); }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 0.5px solid var(--line);
+  }
+
+  .pillar {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .pillar:hover { background: var(--ink-3); }
+
+  .pillar-number {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--gold-dim);
+    margin-bottom: 2rem;
+    font-family: var(--sans);
+  }
+
+  .pillar-title {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: var(--smoke);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .pillar-desc {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--smoke-dim);
+    letter-spacing: 0.01em;
+  }
+
+  .pillar-tag {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border-top: 0.5px solid var(--gold-dim);
+    padding-top: 0.5rem;
+  }
+
+  /* VISION */
+  .vision {
+    background: var(--ink-2);
+    text-align: center;
+  }
+
+  .vision-quote {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--smoke);
+    line-height: 1.5;
+    max-width: 860px;
+    margin: 0 auto 2rem;
+    letter-spacing: 0.02em;
+  }
+  .vision-quote span { color: var(--gold-light); }
+
+  .vision-attribution {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  /* ROADMAP */
+  .roadmap { background: var(--ink); }
+
+  .roadmap-heading {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 300;
+    color: var(--smoke);
+    margin-bottom: 4rem;
+    line-height: 1.2;
+  }
+  .roadmap-heading em { font-style: italic; color: var(--gold-light); }
+
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 0.6rem; bottom: 0;
+    width: 0.5px;
+    background: linear-gradient(to bottom, var(--gold), var(--line), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 0 0 3.5rem 2.5rem;
+  }
+  .timeline-item::before {
+    content: ''; position: absolute;
+    left: -0.3rem; top: 0.55rem;
+    width: 7px; height: 7px;
+    border: 0.5px solid var(--gold);
+    transform: rotate(45deg);
+    background: var(--ink);
+  }
+
+  .timeline-year {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-title {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--smoke);
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-body {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--smoke-dim);
+    max-width: 480px;
+  }
+
+  /* CONTACT */
+  .contact {
+    background: var(--ink-2);
+    text-align: center;
+  }
+
+  .contact-heading {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    font-weight: 300;
+    color: var(--smoke);
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .contact-heading em { font-style: italic; color: var(--gold-light); }
+
+  .contact-sub {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--smoke-dim);
+    margin-bottom: 3rem;
+  }
+
+  .contact-links {
+    display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+    margin-bottom: 4rem;
+  }
+  .contact-link {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--smoke-dim);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--gold-dim);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .contact-link:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 0.5px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--ink);
+  }
+  .footer-name {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--gold-dim);
+  }
+  .footer-copy {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: #444;
+  }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 0 1.5rem 4rem; }
+    .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .pillars { grid-template-columns: 1fr 1fr; }
+    .gold-divider { padding: 0 1.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">M. S. <span>Pandeti</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#structure">Structure</a></li>
+    <li><a href="#vision">Vision</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-eyebrow fade-up visible">Capital · Ventures · Legacy</div>
+  <h1 class="hero-name fade-up visible delay-1">M. S.<br><em>Pandeti</em></h1>
+  <p class="hero-tagline fade-up visible delay-2">Building an integrated financial empire — from capital allocation to venture, from wealth management to generational legacy.</p>
+  <div class="hero-cta fade-up visible delay-3">
+    <a href="#structure" class="btn-primary">The Structure</a>
+    <a href="#about" class="btn-ghost">About</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<div class="gold-divider"><div class="gold-divider-mark"></div></div>
+
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-left">
+      <div class="section-label fade-up">The Foundation</div>
+      <h2 class="about-heading fade-up delay-1">Built on <em>discipline,</em> sustained by vision.</h2>
+      <p class="about-body fade-up delay-2">M. S. Pandeti is the personal financial architecture of Mohan Sai Pandeti — a data engineer, founder-in-progress, and long-horizon capital builder from Tirupati, India.</p>
+      <p class="about-body fade-up delay-3">The mission: to build an integrated empire spanning a family office, an asset management company, a venture capital firm, and a holding entity — all under one name, all compounding over decades.</p>
+    </div>
+    <div class="about-right fade-up delay-2">
+      <div class="stat-row">
+        <span class="stat-label">Target Horizon</span>
+        <span class="stat-value">2035<span class="stat-unit">+</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Entities Planned</span>
+        <span class="stat-value">4<span class="stat-unit">pillars</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Phase</span>
+        <span class="stat-value">0<span class="stat-unit">of 5</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Base</span>
+        <span class="stat-value" style="font-size:1.3rem;">India<span class="stat-unit">→ Global</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"><div class="gold-divider-mark"></div></div>
+
+<section class="structure" id="structure">
+  <div class="section-label fade-up">The Architecture</div>
+  <h2 class="structure-heading fade-up delay-1">Four pillars. <em>One name.</em></h2>
+  <div class="pillars">
+    <div class="pillar fade-up delay-1">
+      <div class="pillar-number">01</div>
+      <div class="pillar-title">Family<br>Office</div>
+      <p class="pillar-desc">Personal wealth management with institutional discipline. Asset allocation, generational preservation, and capital compounding under a formal investment policy.</p>
+      <span class="pillar-tag">Wealth · Legacy</span>
+    </div>
+    <div class="pillar fade-up delay-2">
+      <div class="pillar-number">02</div>
+      <div class="pillar-title">Holding<br>Company</div>
+      <p class="pillar-desc">The spine of the empire. Pandeti Capital Pvt. Ltd. — the legal entity that owns stakes across all verticals, incubates new ventures, and ensures structural control.</p>
+      <span class="pillar-tag">Control · Structure</span>
+    </div>
+    <div class="pillar fade-up delay-3">
+      <div class="pillar-number">03</div>
+      <div class="pillar-title">Venture<br>Capital</div>
+      <p class="pillar-desc">SEBI AIF Category I. Early-stage bets in fintech, data infrastructure, and deeptech. Built on an angel investing track record starting from 2028.</p>
+      <span class="pillar-tag">Alpha · Innovation</span>
+    </div>
+    <div class="pillar fade-up delay-4">
+      <div class="pillar-number">04</div>
+      <div class="pillar-title">Asset<br>Management</div>
+      <p class="pillar-desc">Starting with SEBI PMS registration, evolving into a full AMC. Managing discretionary portfolios for HNIs — capital stewardship at scale.</p>
+      <span class="pillar-tag">Capital · Scale</span>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"><div class="gold-divider-mark"></div></div>
+
+<section class="vision" id="vision">
+  <div class="section-label fade-up" style="justify-content:center; text-align:center;">The Philosophy</div>
+  <blockquote class="vision-quote fade-up delay-1">
+    "The surname is not branding. It is <span>accountability</span> — to every investor, every founder, every generation that follows."
+  </blockquote>
+  <p class="vision-attribution fade-up delay-2">— M. S. Pandeti</p>
+</section>
+
+<div class="gold-divider"><div class="gold-divider-mark"></div></div>
+
+<section class="roadmap" id="roadmap">
+  <div class="section-label fade-up">The Journey</div>
+  <h2 class="roadmap-heading fade-up delay-1">A decade of <em>deliberate</em> construction.</h2>
+  <div class="timeline">
+    <div class="timeline-item fade-up">
+      <div class="timeline-year">2026 — Now</div>
+      <div class="timeline-title">Phase 0 · Income Engine</div>
+      <p class="timeline-body">Land a high-paying Data Engineering role. Begin personal investing. Build financial literacy and the first ₹10–15L of capital.</p>
+    </div>
+    <div class="timeline-item fade-up delay-1">
+      <div class="timeline-year">2027 – 2028</div>
+      <div class="timeline-title">Phase 1 · Legal Foundation</div>
+      <p class="timeline-body">Register Pandeti Capital Private Limited as the holding entity. Establish a clean financial track record for the company.</p>
+    </div>
+    <div class="timeline-item fade-up delay-2">
+      <div class="timeline-year">2028 – 2030</div>
+      <div class="timeline-title">Phase 2 · Family Office</div>
+      <p class="timeline-body">Formalise personal wealth management. First 3–5 angel investments. Build the investment discipline that will define the firm.</p>
+    </div>
+    <div class="timeline-item fade-up delay-3">
+      <div class="timeline-year">2030 – 2033</div>
+      <div class="timeline-title">Phase 3 · Venture Activity</div>
+      <p class="timeline-body">8–10 angel deals. Build LP relationships. Develop the track record required for SEBI AIF registration.</p>
+    </div>
+    <div class="timeline-item fade-up delay-4">
+      <div class="timeline-year">2033 – 2035</div>
+      <div class="timeline-title">Phase 4 · The Full Structure</div>
+      <p class="timeline-body">SEBI AIF Category I (VC Fund). SEBI PMS License. The integrated empire — operational across all four pillars.</p>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"><div class="gold-divider-mark"></div></div>
+
+<section class="contact" id="contact">
+  <div class="section-label fade-up" style="justify-content:center;">Connect</div>
+  <h2 class="contact-heading fade-up delay-1">Let's build<br><em>something lasting.</em></h2>
+  <p class="contact-sub fade-up delay-2">Open to conversations on capital, technology, and long-horizon thinking.</p>
+  <div class="contact-links fade-up delay-3">
+    <a href="https://linkedin.com/in/mohansaipandeti" class="contact-link" target="_blank">LinkedIn</a>
+    <a href="https://github.com/MohanSaiPandeti" class="contact-link" target="_blank">GitHub</a>
+    <a href="https://mohansaipandeti.github.io" class="contact-link" target="_blank">Portfolio</a>
+    <a href="mailto:contact@mspandeti.com" class="contact-link">Email</a>
+  </div>
+  <a href="#hero" class="btn-primary fade-up delay-4">Back to Top</a>
+</section>
+
+<footer>
+  <span class="footer-name">M. S. Pandeti</span>
+  <span class="footer-copy">© 2026 · All rights reserved</span>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
